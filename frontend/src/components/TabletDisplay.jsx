@@ -52,10 +52,10 @@ const TabletDisplay = () => {
     };
   }, []);
 
-  const qrValue = JSON.stringify({
+  const qrValue = `http://localhost:3000/checkin?q=${encodeURIComponent(JSON.stringify({
     token: qrToken,
     timestamp: timestamp.toISOString()
-  });
+  }))}`;
 
   return (
     <div style={{

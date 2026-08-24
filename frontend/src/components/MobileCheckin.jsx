@@ -131,71 +131,199 @@ const MobileCheckin = () => {
   };
 
   return (
-    <div className="min-h-screen bg-gray-50 p-4">
-      <div className="max-w-md mx-auto">
-        <div className="bg-white rounded-lg shadow-lg p-6">
-          <div className="text-center mb-6">
-            <h1 className="text-2xl font-bold text-gray-800">
+    <div style={{
+      minHeight: '100vh',
+      background: '#f5efe6',
+      display: 'flex',
+      alignItems: 'center',
+      justifyContent: 'center',
+      padding: '20px'
+    }}>
+      <div style={{
+        maxWidth: '500px',
+        width: '100%',
+        margin: '0 auto'
+      }}>
+        <div style={{
+          background: '#ffffff',
+          borderRadius: '12px',
+          padding: '40px',
+          boxShadow: '0 4px 16px rgba(139, 115, 85, 0.15)',
+          border: '1px solid #e8ddd0'
+        }}>
+          <div style={{ textAlign: 'center', marginBottom: '28px' }}>
+            <div style={{
+              display: 'inline-block',
+              background: '#6b4c2a',
+              padding: '8px 20px',
+              borderRadius: '8px',
+              marginBottom: '10px'
+            }}>
+              <span style={{
+                fontSize: '16px',
+                fontWeight: '700',
+                color: '#ffffff',
+                letterSpacing: '0.5px'
+              }}>
+                Check-in
+              </span>
+            </div>
+            <h1 style={{
+              fontSize: '24px',
+              fontWeight: '700',
+              color: '#4a3520',
+              margin: '8px 0 4px'
+            }}>
               Employee Check-in
             </h1>
-            <p className="text-sm text-gray-600 mt-1">
+            <p style={{
+              fontSize: '14px',
+              color: '#8b7a66',
+              margin: 0
+            }}>
               Scan the QR code at the office entrance
             </p>
           </div>
 
-          <div className="mb-4 p-3 bg-gray-50 rounded-lg">
-            <div className="flex items-center justify-between">
-              <div className="flex items-center gap-2">
-                <div className={`w-3 h-3 rounded-full ${location ? 'bg-green-500' : 'bg-yellow-500'}`}></div>
-                <span className="text-sm font-medium text-gray-700">
+          {/* GPS Status */}
+          <div style={{
+            background: '#f5efe6',
+            padding: '14px 16px',
+            borderRadius: '8px',
+            border: '1px solid #e8ddd0',
+            marginBottom: '16px'
+          }}>
+            <div style={{
+              display: 'flex',
+              alignItems: 'center',
+              justifyContent: 'space-between'
+            }}>
+              <div style={{
+                display: 'flex',
+                alignItems: 'center',
+                gap: '8px'
+              }}>
+                <div style={{
+                  width: '10px',
+                  height: '10px',
+                  borderRadius: '50%',
+                  backgroundColor: location ? '#5a8f6c' : '#d4a373'
+                }}></div>
+                <span style={{
+                  fontSize: '14px',
+                  fontWeight: '600',
+                  color: '#4a3520'
+                }}>
                   {location ? 'GPS Active' : 'Acquiring GPS...'}
                 </span>
               </div>
               <button
                 onClick={getCurrentLocation}
-                className="text-xs text-indigo-600 hover:text-indigo-800"
+                style={{
+                  fontSize: '12px',
+                  color: '#6b4c2a',
+                  background: 'none',
+                  border: 'none',
+                  cursor: 'pointer',
+                  fontWeight: '600',
+                  textDecoration: 'underline'
+                }}
               >
                 Refresh
               </button>
             </div>
             {location && (
-              <p className="text-xs text-gray-500 mt-1">
+              <p style={{
+                fontSize: '12px',
+                color: '#8b7a66',
+                marginTop: '6px'
+              }}>
                 Lat: {location.latitude.toFixed(6)}, Lng: {location.longitude.toFixed(6)}
                 {location.accuracy && ` (Accuracy: +/-${location.accuracy.toFixed(0)}m)`}
               </p>
             )}
             {locationError && (
-              <p className="text-xs text-red-500 mt-1">{locationError}</p>
+              <p style={{
+                fontSize: '12px',
+                color: '#9c2e2e',
+                marginTop: '6px'
+              }}>
+                {locationError}
+              </p>
             )}
           </div>
 
-          <div className="mb-4 p-3 bg-blue-50 rounded-lg">
-            <div className="flex items-center justify-between">
-              <span className="text-sm font-medium text-gray-700">
+          {/* QR Status */}
+          <div style={{
+            background: '#fdf6ed',
+            padding: '14px 16px',
+            borderRadius: '8px',
+            border: '1px solid #e8d5b8',
+            marginBottom: '20px'
+          }}>
+            <div style={{
+              display: 'flex',
+              alignItems: 'center',
+              justifyContent: 'space-between'
+            }}>
+              <span style={{
+                fontSize: '14px',
+                fontWeight: '600',
+                color: '#4a3520'
+              }}>
                 QR Code Status
               </span>
-              <span className={`text-xs font-medium ${qrData ? 'text-green-600' : 'text-yellow-600'}`}>
+              <span style={{
+                fontSize: '12px',
+                fontWeight: '600',
+                color: qrData ? '#2d6a4f' : '#b45309'
+              }}>
                 {qrData ? 'Scanned' : 'Not scanned'}
               </span>
             </div>
             {qrData && (
-              <p className="text-xs text-gray-500 mt-1">
+              <p style={{
+                fontSize: '11px',
+                color: '#8b7a66',
+                marginTop: '4px',
+                fontFamily: 'monospace'
+              }}>
                 Token: {qrData.token.substring(0, 20)}...
               </p>
             )}
             {!qrData && (
               <button
                 onClick={handleRescanQR}
-                className="mt-2 text-xs text-indigo-600 hover:text-indigo-800 underline"
+                style={{
+                  marginTop: '8px',
+                  fontSize: '12px',
+                  color: '#6b4c2a',
+                  background: 'none',
+                  border: 'none',
+                  textDecoration: 'underline',
+                  cursor: 'pointer',
+                  fontWeight: '600'
+                }}
               >
                 Scan QR Code
               </button>
             )}
           </div>
 
-          <form onSubmit={handleCheckIn} className="space-y-4">
+          {/* Check-in Form */}
+          <form onSubmit={handleCheckIn} style={{
+            display: 'flex',
+            flexDirection: 'column',
+            gap: '16px'
+          }}>
             <div>
-              <label className="block text-sm font-medium text-gray-700 mb-1">
+              <label style={{
+                display: 'block',
+                fontSize: '14px',
+                fontWeight: '600',
+                color: '#4a3520',
+                marginBottom: '6px'
+              }}>
                 Employee ID
               </label>
               <input
@@ -203,35 +331,80 @@ const MobileCheckin = () => {
                 value={employeeId}
                 onChange={(e) => setEmployeeId(e.target.value)}
                 placeholder="Enter your employee ID"
-                className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-transparent"
+                style={{
+                  width: '100%',
+                  padding: '12px 16px',
+                  border: '2px solid #e8ddd0',
+                  borderRadius: '8px',
+                  fontSize: '14px',
+                  transition: 'all 0.2s',
+                  background: '#faf6f0',
+                  color: '#4a3520',
+                  outline: 'none'
+                }}
+                onFocus={(e) => {
+                  e.target.style.borderColor = '#6b4c2a';
+                  e.target.style.background = '#ffffff';
+                  e.target.style.boxShadow = '0 0 0 3px rgba(107, 76, 42, 0.1)';
+                }}
+                onBlur={(e) => {
+                  e.target.style.borderColor = '#e8ddd0';
+                  e.target.style.background = '#faf6f0';
+                  e.target.style.boxShadow = 'none';
+                }}
                 disabled={isLoading}
               />
             </div>
 
             <div>
-              <label className="block text-sm font-medium text-gray-700 mb-1">
+              <label style={{
+                display: 'block',
+                fontSize: '14px',
+                fontWeight: '600',
+                color: '#4a3520',
+                marginBottom: '6px'
+              }}>
                 Check-in Type
               </label>
-              <div className="flex gap-2">
+              <div style={{
+                display: 'flex',
+                gap: '8px'
+              }}>
                 <button
                   type="button"
                   onClick={() => setCheckInType('IN')}
-                  className={`flex-1 py-2 px-4 rounded-lg text-sm font-medium transition ${
-                    checkInType === 'IN'
-                      ? 'bg-indigo-600 text-white'
-                      : 'bg-gray-100 text-gray-700 hover:bg-gray-200'
-                  }`}
+                  style={{
+                    flex: 1,
+                    padding: '10px 16px',
+                    borderRadius: '8px',
+                    fontSize: '14px',
+                    fontWeight: '600',
+                    border: '2px solid',
+                    cursor: 'pointer',
+                    transition: 'all 0.2s',
+                    backgroundColor: checkInType === 'IN' ? '#6b4c2a' : '#faf6f0',
+                    borderColor: checkInType === 'IN' ? '#6b4c2a' : '#e8ddd0',
+                    color: checkInType === 'IN' ? '#ffffff' : '#4a3520'
+                  }}
                 >
                   Check In
                 </button>
                 <button
                   type="button"
                   onClick={() => setCheckInType('OUT')}
-                  className={`flex-1 py-2 px-4 rounded-lg text-sm font-medium transition ${
-                    checkInType === 'OUT'
-                      ? 'bg-indigo-600 text-white'
-                      : 'bg-gray-100 text-gray-700 hover:bg-gray-200'
-                  }`}
+                  style={{
+                    flex: 1,
+                    padding: '10px 16px',
+                    borderRadius: '8px',
+                    fontSize: '14px',
+                    fontWeight: '600',
+                    border: '2px solid',
+                    cursor: 'pointer',
+                    transition: 'all 0.2s',
+                    backgroundColor: checkInType === 'OUT' ? '#6b4c2a' : '#faf6f0',
+                    borderColor: checkInType === 'OUT' ? '#6b4c2a' : '#e8ddd0',
+                    color: checkInType === 'OUT' ? '#ffffff' : '#4a3520'
+                  }}
                 >
                   Check Out
                 </button>
@@ -241,19 +414,93 @@ const MobileCheckin = () => {
             <button
               type="submit"
               disabled={isLoading || !location || !qrData}
-              className="w-full bg-indigo-600 text-white py-3 px-4 rounded-lg font-medium hover:bg-indigo-700 transition disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center"
+              style={{
+                width: '100%',
+                background: '#6b4c2a',
+                color: '#ffffff',
+                padding: '14px 20px',
+                borderRadius: '8px',
+                fontWeight: '600',
+                fontSize: '16px',
+                border: 'none',
+                cursor: 'pointer',
+                transition: 'all 0.3s',
+                opacity: (isLoading || !location || !qrData) ? 0.6 : 1,
+                display: 'flex',
+                alignItems: 'center',
+                justifyContent: 'center',
+                boxShadow: '0 2px 8px rgba(107, 76, 42, 0.3)',
+                marginTop: '4px'
+              }}
+              onMouseEnter={(e) => {
+                if (!isLoading && location && qrData) {
+                  e.target.style.background = '#5a3d22';
+                  e.target.style.boxShadow = '0 4px 12px rgba(107, 76, 42, 0.4)';
+                }
+              }}
+              onMouseLeave={(e) => {
+                e.target.style.background = '#6b4c2a';
+                e.target.style.boxShadow = '0 2px 8px rgba(107, 76, 42, 0.3)';
+              }}
             >
               {isLoading ? (
-                <ThreeDots color="white" height={30} width={30} />
+                <ThreeDots color="#ffffff" height={30} width={30} />
               ) : (
                 `Check ${checkInType === 'IN' ? 'In' : 'Out'}`
               )}
             </button>
 
-            <p className="text-xs text-gray-500 text-center mt-2">
-              Device ID: {deviceId.substring(0, 12)}...
-            </p>
+            <div style={{
+              background: '#f5efe6',
+              padding: '10px 14px',
+              borderRadius: '6px',
+              border: '1px solid #e8ddd0',
+              marginTop: '4px'
+            }}>
+              <p style={{
+                fontSize: '11px',
+                color: '#8b7a66',
+                margin: 0,
+                display: 'flex',
+                alignItems: 'center',
+                gap: '6px'
+              }}>
+                <span style={{
+                  display: 'inline-block',
+                  width: '6px',
+                  height: '6px',
+                  borderRadius: '50%',
+                  background: '#5a8f6c'
+                }}></span>
+                <span style={{ fontWeight: '600', color: '#4a3520' }}>Device:</span>
+                <span style={{
+                  fontFamily: 'monospace',
+                  fontSize: '10px',
+                  color: '#4a3520'
+                }}>
+                  {deviceId.substring(0, 12)}...
+                </span>
+              </p>
+            </div>
           </form>
+
+          <div style={{
+            marginTop: '16px',
+            textAlign: 'center'
+          }}>
+            <p style={{
+              fontSize: '13px',
+              color: '#8b7a66',
+              margin: 0
+            }}>
+              Need to register? <a href="/register" style={{
+                color: '#6b4c2a',
+                fontWeight: '600',
+                textDecoration: 'none',
+                borderBottom: '2px solid #6b4c2a'
+              }}>Register Device</a>
+            </p>
+          </div>
         </div>
       </div>
     </div>

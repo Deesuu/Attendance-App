@@ -187,7 +187,7 @@ const EmployeeRegistration = () => {
                 name="name"
                 value={formData.name}
                 onChange={handleChange}
-                placeholder="John Doe"
+                placeholder="e.g., Yusuf kanbai"
                 style={{
                   width: '100%',
                   padding: '12px 16px',
@@ -229,7 +229,7 @@ const EmployeeRegistration = () => {
                 name="email"
                 value={formData.email}
                 onChange={handleChange}
-                placeholder="john@company.com"
+                placeholder="ykb@nvrlazy.com"
                 style={{
                   width: '100%',
                   padding: '12px 16px',
