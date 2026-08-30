@@ -52,10 +52,10 @@ const TabletDisplay = () => {
     };
   }, []);
 
-  const qrValue = `https://attendance-app-1-k731.onrender.com/checkin?q=${encodeURIComponent(JSON.stringify({
-    token: qrToken,
-    timestamp: timestamp.toISOString()
-  }))}`;
+  const qrValue = `https://attendance-frontend-b57d.onrender.com/checkin?q=${encodeURIComponent(JSON.stringify({
+  token: qrToken,
+  timestamp: timestamp.toISOString()
+}))}`;
 
   return (
     <div style={{
