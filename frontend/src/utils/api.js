@@ -1,7 +1,7 @@
 import axios from 'axios';
 import { getDeviceId } from './deviceId';
 
-const API_BASE_URL = process.env.REACT_APP_API_URL || 'http://localhost:5000/api';
+const API_BASE_URL = 'https://attendance-backend-omf0.onrender.com/api';
 
 const api = axios.create({
   baseURL: API_BASE_URL,
