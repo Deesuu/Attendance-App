@@ -16,7 +16,7 @@ const app = express();
 app.use(helmet());
 app.use(compression());
 app.use(cors({
-  origin: process.env.FRONTEND_URL || 'http://localhost:3000',
+  origin: process.env.FRONTEND_URL || 'https://attendance-frontend-b57d.onrender.com',
   credentials: true
 }));
 app.use(express.json({ limit: '10kb' }));
@@ -24,7 +24,7 @@ app.use(express.urlencoded({ extended: true, limit: '10kb' }));
 
 const limiter = rateLimit({
   windowMs: 15 * 60 * 1000,
-  max: 100,
+  max: 1000, // Increased for testing
   message: {
     success: false,
     message: 'Too many requests, please try again later.'
