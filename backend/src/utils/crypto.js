@@ -2,7 +2,7 @@ const CryptoJS = require('crypto-js');
 const crypto = require('crypto');
 
 const SECRET_KEY = process.env.QR_SECRET_KEY || 'default_secret_key_change_me';
-const TOKEN_EXPIRY = parseInt(process.env.TOKEN_EXPIRY_SECONDS) || 5;
+const TOKEN_EXPIRY = parseInt(process.env.TOKEN_EXPIRY_SECONDS) || 30;
 
 const generateQRToken = () => {
   const timestamp = Date.now();
