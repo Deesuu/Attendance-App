@@ -6,35 +6,39 @@ const registerEmployee = async (req, res) => {
     const { employeeId, name, email, deviceId, department } = req.body;
 
     let employee = await Employee.findOne({ employeeId });
-    if (employee) {
-      if (!employee.isRegistered) {
-        employee.deviceId = deviceId;
-        employee.isRegistered = true;
-        employee.registrationDate = new Date();
-        await employee.save();
+if (employee) {
+  // Allow re-registration if device has changed or not registered
+  if (!employee.isRegistered || employee.deviceId !== deviceId) {
+    employee.deviceId = deviceId;
+    employee.name = name;
+    employee.email = email;
+    employee.department = department;
+    employee.isRegistered = true;
+    employee.registrationDate = new Date();
+    await employee.save();
 
-        const token = generateToken(employee.employeeId);
+    const token = generateToken(employee.employeeId);
 
-        return res.status(200).json({
-          success: true,
-          message: 'Employee registration completed',
-          token: token,
-          data: {
-            employeeId: employee.employeeId,
-            name: employee.name,
-            email: employee.email,
-            deviceId: employee.deviceId
-          }
-        });
+    return res.status(200).json({
+      success: true,
+      message: 'Device updated successfully',
+      token: token,
+      data: {
+        employeeId: employee.employeeId,
+        name: employee.name,
+        email: employee.email,
+        deviceId: employee.deviceId,
+        department: employee.department
       }
+    });
+  }
 
-      return res.status(409).json({
-        success: false,
-        message: 'Employee already registered',
-        code: 'EMPLOYEE_EXISTS'
-      });
-    }
-
+  return res.status(409).json({
+    success: false,
+    message: 'Employee already registered with this device',
+    code: 'EMPLOYEE_EXISTS'
+  });
+}
     employee = new Employee({
       employeeId,
       name,
