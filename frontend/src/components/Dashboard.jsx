@@ -16,33 +16,45 @@ const Dashboard = () => {
     fetchEmployeeInfo();
   }, []);
 
-  const fetchEmployeeInfo = async () => {
-    try {
-      const deviceId = getDeviceId();
+ const fetchEmployeeInfo = async () => {
+  try {
+    // Priority 1: URL parameters (most reliable on iOS)
+    const params = new URLSearchParams(window.location.search);
+    let empId = params.get('employeeId');
+    let empName = params.get('name');
 
-      // Try to get employee info from localStorage (saved during registration or check-in)
-      const storedEmployeeId = localStorage.getItem('attendance_employee_id');
-      const storedEmployeeName = localStorage.getItem('attendance_employee_name');
-
-      if (storedEmployeeId) {
-        setEmployeeInfo({
-          employeeId: storedEmployeeId,
-          name: storedEmployeeName || 'Employee'
-        });
-
-        // Fetch attendance using the actual employee ID
-        await fetchAttendanceData(storedEmployeeId);
-        await fetchTodayStats();
-      } else {
-        // No stored employee - ask user to check in
-        setIsLoading(false);
-        toast.error('No active session. Please check in first.');
-      }
-    } catch (error) {
-      console.error('Dashboard load error:', error);
-      setIsLoading(false);
+    // Priority 2: localStorage fallback
+    if (!empId) {
+      empId = localStorage.getItem('attendance_employee_id');
+      empName = localStorage.getItem('attendance_employee_name');
     }
-  };
+
+    if (!empId) {
+      setIsLoading(false);
+      toast.error('No active session. Please check in first.');
+      return;
+    }
+
+    setEmployeeInfo({
+      employeeId: empId,
+      name: empName || 'Employee'
+    });
+
+    // Save for future visits
+    try {
+      localStorage.setItem('attendance_employee_id', empId);
+      if (empName) localStorage.setItem('attendance_employee_name', empName);
+    } catch (e) {
+      console.warn('localStorage failed:', e);
+    }
+
+    await fetchAttendanceData(empId);
+    await fetchTodayStats();
+  } catch (error) {
+    console.error('Dashboard load error:', error);
+    setIsLoading(false);
+  }
+};
 
   const fetchAttendanceData = async (employeeId) => {
     try {
