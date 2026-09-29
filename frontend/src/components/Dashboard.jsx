@@ -13,33 +13,40 @@ const Dashboard = () => {
   const navigate = useNavigate();
 
   useEffect(() => {
-    fetchAttendanceData();
-    fetchTodayStats();
     fetchEmployeeInfo();
-
-    const interval = setInterval(() => {
-      fetchTodayStats();
-    }, 60000);
-
-    return () => clearInterval(interval);
   }, []);
 
   const fetchEmployeeInfo = async () => {
     try {
       const deviceId = getDeviceId();
-      const response = await api.post('/employees/verify', { deviceId });
-      if (response.data.success) {
-        setEmployeeInfo(response.data.data);
+
+      // Try to get employee info from localStorage (saved during registration or check-in)
+      const storedEmployeeId = localStorage.getItem('attendance_employee_id');
+      const storedEmployeeName = localStorage.getItem('attendance_employee_name');
+
+      if (storedEmployeeId) {
+        setEmployeeInfo({
+          employeeId: storedEmployeeId,
+          name: storedEmployeeName || 'Employee'
+        });
+
+        // Fetch attendance using the actual employee ID
+        await fetchAttendanceData(storedEmployeeId);
+        await fetchTodayStats();
+      } else {
+        // No stored employee - ask user to check in
+        setIsLoading(false);
+        toast.error('No active session. Please check in first.');
       }
     } catch (error) {
-      console.error('Failed to fetch employee info:', error);
+      console.error('Dashboard load error:', error);
+      setIsLoading(false);
     }
   };
 
-  const fetchAttendanceData = async () => {
+  const fetchAttendanceData = async (employeeId) => {
     try {
-      const deviceId = getDeviceId();
-      const response = await api.get(`/attendance/history/${deviceId}?limit=10`);
+      const response = await api.get(`/attendance/history/${employeeId}?limit=10`);
       if (response.data.success) {
         setAttendance(response.data.data);
       }
@@ -129,9 +136,7 @@ const Dashboard = () => {
                 ID: {employeeInfo?.employeeId || 'N/A'}
               </p>
             </div>
-            <div style={{
-              textAlign: 'right'
-            }}>
+            <div style={{ textAlign: 'right' }}>
               <p style={{
                 fontSize: '14px',
                 color: '#8b7a66',
@@ -263,7 +268,7 @@ const Dashboard = () => {
               {attendance.length} records
             </span>
           </div>
-          
+
           {attendance.length === 0 ? (
             <div style={{
               textAlign: 'center',
@@ -286,64 +291,21 @@ const Dashboard = () => {
                 fontSize: '14px'
               }}>
                 <thead>
-                  <tr style={{
-                    background: '#f5efe6',
-                    borderRadius: '6px'
-                  }}>
-                    <th style={{
-                      padding: '12px 16px',
-                      textAlign: 'left',
-                      color: '#6b4c2a',
-                      fontWeight: '600',
-                      fontSize: '13px',
-                      textTransform: 'uppercase',
-                      letterSpacing: '0.5px'
-                    }}>
-                      Date & Time
-                    </th>
-                    <th style={{
-                      padding: '12px 16px',
-                      textAlign: 'center',
-                      color: '#6b4c2a',
-                      fontWeight: '600',
-                      fontSize: '13px',
-                      textTransform: 'uppercase',
-                      letterSpacing: '0.5px'
-                    }}>
-                      Type
-                    </th>
-                    <th style={{
-                      padding: '12px 16px',
-                      textAlign: 'center',
-                      color: '#6b4c2a',
-                      fontWeight: '600',
-                      fontSize: '13px',
-                      textTransform: 'uppercase',
-                      letterSpacing: '0.5px'
-                    }}>
-                      Status
-                    </th>
+                  <tr style={{ background: '#f5efe6', borderRadius: '6px' }}>
+                    <th style={{ padding: '12px 16px', textAlign: 'left', color: '#6b4c2a', fontWeight: '600', fontSize: '13px', textTransform: 'uppercase', letterSpacing: '0.5px' }}>Date & Time</th>
+                    <th style={{ padding: '12px 16px', textAlign: 'center', color: '#6b4c2a', fontWeight: '600', fontSize: '13px', textTransform: 'uppercase', letterSpacing: '0.5px' }}>Type</th>
+                    <th style={{ padding: '12px 16px', textAlign: 'center', color: '#6b4c2a', fontWeight: '600', fontSize: '13px', textTransform: 'uppercase', letterSpacing: '0.5px' }}>Status</th>
                   </tr>
                 </thead>
                 <tbody>
                   {attendance.map((record, index) => (
                     <tr key={index} style={{
-                      borderTop: '1px solid #f0e8de',
-                      transition: 'background 0.2s'
-                    }}
-                    onMouseEnter={(e) => e.currentTarget.style.background = '#faf6f0'}
-                    onMouseLeave={(e) => e.currentTarget.style.background = 'transparent'}
-                    >
-                      <td style={{
-                        padding: '12px 16px',
-                        color: '#4a3520'
-                      }}>
+                      borderTop: '1px solid #f0e8de'
+                    }}>
+                      <td style={{ padding: '12px 16px', color: '#4a3520' }}>
                         {format(new Date(record.timestamp), 'MMM d, HH:mm')}
                       </td>
-                      <td style={{
-                        padding: '12px 16px',
-                        textAlign: 'center'
-                      }}>
+                      <td style={{ padding: '12px 16px', textAlign: 'center' }}>
                         <span style={{
                           display: 'inline-block',
                           padding: '2px 12px',
@@ -356,10 +318,7 @@ const Dashboard = () => {
                           {record.checkInType}
                         </span>
                       </td>
-                      <td style={{
-                        padding: '12px 16px',
-                        textAlign: 'center'
-                      }}>
+                      <td style={{ padding: '12px 16px', textAlign: 'center' }}>
                         <span style={{
                           display: 'inline-block',
                           padding: '2px 12px',
@@ -398,20 +357,7 @@ const Dashboard = () => {
               fontSize: '15px',
               border: 'none',
               cursor: 'pointer',
-              transition: 'all 0.3s',
-              boxShadow: '0 2px 8px rgba(107, 76, 42, 0.3)',
-              display: 'flex',
-              alignItems: 'center',
-              justifyContent: 'center',
-              gap: '8px'
-            }}
-            onMouseEnter={(e) => {
-              e.target.style.background = '#5a3d22';
-              e.target.style.boxShadow = '0 4px 12px rgba(107, 76, 42, 0.4)';
-            }}
-            onMouseLeave={(e) => {
-              e.target.style.background = '#6b4c2a';
-              e.target.style.boxShadow = '0 2px 8px rgba(107, 76, 42, 0.3)';
+              boxShadow: '0 2px 8px rgba(107, 76, 42, 0.3)'
             }}
           >
             Check In
@@ -426,20 +372,7 @@ const Dashboard = () => {
               fontWeight: '600',
               fontSize: '15px',
               border: '2px solid #e8ddd0',
-              cursor: 'pointer',
-              transition: 'all 0.3s',
-              display: 'flex',
-              alignItems: 'center',
-              justifyContent: 'center',
-              gap: '8px'
-            }}
-            onMouseEnter={(e) => {
-              e.target.style.background = '#e8ddd0';
-              e.target.style.borderColor = '#6b4c2a';
-            }}
-            onMouseLeave={(e) => {
-              e.target.style.background = '#f5efe6';
-              e.target.style.borderColor = '#e8ddd0';
+              cursor: 'pointer'
             }}
           >
             Register Device

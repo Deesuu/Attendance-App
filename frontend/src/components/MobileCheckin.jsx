@@ -105,13 +105,18 @@ const MobileCheckin = () => {
       const response = await api.post('/attendance/checkin', payload);
 
       if (response.data.success) {
-        toast.success(`Checked ${checkInType === 'IN' ? 'in' : 'out'} successfully`);
-        setEmployeeId('');
-        setCheckInType('IN');
-        setTimeout(() => {
-          navigate('/dashboard');
-        }, 2000);
-      }
+  toast.success(`Checked ${checkInType === 'IN' ? 'in' : 'out'} successfully`);
+
+  // Save employee info for the dashboard
+  localStorage.setItem('attendance_employee_id', employeeId.trim());
+  localStorage.setItem('attendance_employee_name', response.data.data?.name || 'Employee');
+
+  setEmployeeId('');
+  setCheckInType('IN');
+  setTimeout(() => {
+    navigate('/dashboard');
+  }, 2000);
+}
     } catch (error) {
       console.error('Check-in error:', error);
       
