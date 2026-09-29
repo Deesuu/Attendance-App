@@ -6,12 +6,11 @@ const {
   getTodayStats
 } = require('../controllers/attendanceController');
 const { validateCheckIn } = require('../middleware/validation');
-const { authenticate } = require('../middleware/auth');
 const { generateTokenEndpoint } = require('../utils/crypto');
 
 router.get('/token', generateTokenEndpoint);
 router.post('/checkin', validateCheckIn, checkIn);
-router.get('/history/:employeeId', authenticate, getAttendanceHistory);
-router.get('/today/stats', authenticate, getTodayStats);
+router.get('/history/:employeeId', getAttendanceHistory);
+router.get('/today/stats', getTodayStats);
 
 module.exports = router;
