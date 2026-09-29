@@ -94,6 +94,14 @@ const MobileCheckin = () => {
         checkInType
       };
 
+      // Temporary debug log - remove after fixing
+      console.log('=== CHECK-IN PAYLOAD ===');
+      console.log('employeeId:', payload.employeeId);
+      console.log('deviceId:', payload.deviceId);
+      console.log('qrToken (first 30):', payload.qrToken.substring(0, 30));
+      console.log('checkInType:', payload.checkInType);
+      console.log('========================');
+
       const response = await api.post('/attendance/checkin', payload);
 
       if (response.data.success) {
@@ -450,36 +458,27 @@ const MobileCheckin = () => {
               )}
             </button>
 
+            {/* TEMPORARY DEBUG BOX - FULL DEVICE ID */}
             <div style={{
-              background: '#f5efe6',
+              background: '#ffff00',
               padding: '10px 14px',
               borderRadius: '6px',
-              border: '1px solid #e8ddd0',
-              marginTop: '4px'
+              border: '2px solid #000',
+              marginTop: '4px',
+              wordBreak: 'break-all'
             }}>
               <p style={{
-                fontSize: '11px',
-                color: '#8b7a66',
+                fontSize: '10px',
+                color: '#000',
                 margin: 0,
-                display: 'flex',
-                alignItems: 'center',
-                gap: '6px'
+                fontFamily: 'monospace',
+                lineHeight: '1.4'
               }}>
-                <span style={{
-                  display: 'inline-block',
-                  width: '6px',
-                  height: '6px',
-                  borderRadius: '50%',
-                  background: '#5a8f6c'
-                }}></span>
-                <span style={{ fontWeight: '600', color: '#4a3520' }}>Device:</span>
-                <span style={{
-                  fontFamily: 'monospace',
-                  fontSize: '10px',
-                  color: '#4a3520'
-                }}>
-                  {deviceId.substring(0, 12)}...
-                </span>
+                <span style={{ fontWeight: '700' }}>DEVICE_ID_START:</span>
+                <br />
+                {deviceId}
+                <br />
+                <span style={{ fontWeight: '700' }}>:DEVICE_ID_END</span>
               </p>
             </div>
           </form>
