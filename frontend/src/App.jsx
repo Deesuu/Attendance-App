@@ -5,6 +5,7 @@ import TabletDisplay from './components/TabletDisplay';
 import MobileCheckin from './components/MobileCheckin';
 import EmployeeRegistration from './components/EmployeeRegistration';
 import Dashboard from './components/Dashboard';
+import AdminDashboard from './components/AdminDashboard';
 
 function App() {
   return (
@@ -37,6 +38,7 @@ function App() {
           <Route path="/checkin" element={<MobileCheckin />} />
           <Route path="/register" element={<EmployeeRegistration />} />
           <Route path="/dashboard" element={<Dashboard />} />
+          <Route path="/admin" element={<AdminDashboard />} />
         </Routes>
       </div>
     </Router>

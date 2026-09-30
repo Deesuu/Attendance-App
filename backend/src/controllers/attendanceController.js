@@ -204,8 +204,38 @@ const getTodayStats = async (req, res) => {
   }
 };
 
+const getAllAttendance = async (req, res) => {
+  try {
+    const { limit = 100, startDate, endDate } = req.query;
+
+    const query = {};
+    if (startDate || endDate) {
+      query.timestamp = {};
+      if (startDate) query.timestamp.$gte = new Date(startDate);
+      if (endDate) query.timestamp.$lte = new Date(endDate);
+    }
+
+    const attendance = await Attendance.find(query)
+      .sort({ timestamp: -1 })
+      .limit(parseInt(limit));
+
+    res.json({
+      success: true,
+      count: attendance.length,
+      data: attendance
+    });
+  } catch (error) {
+    console.error('Get all attendance error:', error);
+    res.status(500).json({
+      success: false,
+      message: 'Error fetching attendance'
+    });
+  }
+};
+
 module.exports = {
   checkIn,
   getAttendanceHistory,
-  getTodayStats
+  getTodayStats,
+  getAllAttendance
 };

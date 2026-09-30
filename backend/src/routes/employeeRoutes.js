@@ -6,10 +6,9 @@ const {
   getAllEmployees
 } = require('../controllers/authController');
 const { validateRegistration } = require('../middleware/validation');
-const { authenticate, authorizeHR } = require('../middleware/auth');
 
 router.post('/register', validateRegistration, registerEmployee);
 router.post('/verify', verifyEmployee);
-router.get('/all', authenticate, authorizeHR, getAllEmployees);
+router.get('/all', getAllEmployees);
 
 module.exports = router;
