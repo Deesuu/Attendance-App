@@ -99,7 +99,7 @@ const AdminDashboard = () => {
                 color: '#4a3520',
                 margin: 0
               }}>
-                Admin Dashboard
+                VeriStaff Admin Dashboard
               </h1>
               <p style={{
                 fontSize: '14px',

@@ -3,7 +3,6 @@ import { useNavigate } from 'react-router-dom';
 import toast from 'react-hot-toast';
 import { format } from 'date-fns';
 import api from '../utils/api';
-import { getDeviceId } from '../utils/deviceId';
 
 const Dashboard = () => {
   const [attendance, setAttendance] = useState([]);
@@ -16,45 +15,42 @@ const Dashboard = () => {
     fetchEmployeeInfo();
   }, []);
 
- const fetchEmployeeInfo = async () => {
-  try {
-    // Priority 1: URL parameters (most reliable on iOS)
-    const params = new URLSearchParams(window.location.search);
-    let empId = params.get('employeeId');
-    let empName = params.get('name');
-
-    // Priority 2: localStorage fallback
-    if (!empId) {
-      empId = localStorage.getItem('attendance_employee_id');
-      empName = localStorage.getItem('attendance_employee_name');
-    }
-
-    if (!empId) {
-      setIsLoading(false);
-      toast.error('No active session. Please check in first.');
-      return;
-    }
-
-    setEmployeeInfo({
-      employeeId: empId,
-      name: empName || 'Employee'
-    });
-
-    // Save for future visits
+  const fetchEmployeeInfo = async () => {
     try {
-      localStorage.setItem('attendance_employee_id', empId);
-      if (empName) localStorage.setItem('attendance_employee_name', empName);
-    } catch (e) {
-      console.warn('localStorage failed:', e);
-    }
+      const params = new URLSearchParams(window.location.search);
+      let empId = params.get('employeeId');
+      let empName = params.get('name');
 
-    await fetchAttendanceData(empId);
-    await fetchTodayStats();
-  } catch (error) {
-    console.error('Dashboard load error:', error);
-    setIsLoading(false);
-  }
-};
+      if (!empId) {
+        empId = localStorage.getItem('attendance_employee_id');
+        empName = localStorage.getItem('attendance_employee_name');
+      }
+
+      if (!empId) {
+        setIsLoading(false);
+        toast.error('No active session. Please check in first.');
+        return;
+      }
+
+      setEmployeeInfo({
+        employeeId: empId,
+        name: empName || 'Employee'
+      });
+
+      try {
+        localStorage.setItem('attendance_employee_id', empId);
+        if (empName) localStorage.setItem('attendance_employee_name', empName);
+      } catch (e) {
+        console.warn('localStorage failed:', e);
+      }
+
+      await fetchAttendanceData(empId);
+      await fetchTodayStats();
+    } catch (error) {
+      console.error('Dashboard load error:', error);
+      setIsLoading(false);
+    }
+  };
 
   const fetchAttendanceData = async (employeeId) => {
     try {
@@ -177,20 +173,10 @@ const Dashboard = () => {
               border: '1px solid #e8ddd0',
               textAlign: 'center'
             }}>
-              <p style={{
-                fontSize: '13px',
-                color: '#8b7a66',
-                fontWeight: '500',
-                margin: 0
-              }}>
+              <p style={{ fontSize: '13px', color: '#8b7a66', fontWeight: '500', margin: 0 }}>
                 Total Check-ins Today
               </p>
-              <p style={{
-                fontSize: '32px',
-                fontWeight: '700',
-                color: '#4a3520',
-                margin: '4px 0 0'
-              }}>
+              <p style={{ fontSize: '32px', fontWeight: '700', color: '#4a3520', margin: '4px 0 0' }}>
                 {stats.details?.reduce((sum, d) => sum + d.checkIns, 0) || 0}
               </p>
             </div>
@@ -202,20 +188,10 @@ const Dashboard = () => {
               border: '1px solid #e8ddd0',
               textAlign: 'center'
             }}>
-              <p style={{
-                fontSize: '13px',
-                color: '#8b7a66',
-                fontWeight: '500',
-                margin: 0
-              }}>
+              <p style={{ fontSize: '13px', color: '#8b7a66', fontWeight: '500', margin: 0 }}>
                 Active Employees
               </p>
-              <p style={{
-                fontSize: '32px',
-                fontWeight: '700',
-                color: '#4a3520',
-                margin: '4px 0 0'
-              }}>
+              <p style={{ fontSize: '32px', fontWeight: '700', color: '#4a3520', margin: '4px 0 0' }}>
                 {stats.presentToday || 0}
               </p>
             </div>
@@ -227,20 +203,10 @@ const Dashboard = () => {
               border: '1px solid #e8ddd0',
               textAlign: 'center'
             }}>
-              <p style={{
-                fontSize: '13px',
-                color: '#8b7a66',
-                fontWeight: '500',
-                margin: 0
-              }}>
+              <p style={{ fontSize: '13px', color: '#8b7a66', fontWeight: '500', margin: 0 }}>
                 Total Employees
               </p>
-              <p style={{
-                fontSize: '32px',
-                fontWeight: '700',
-                color: '#4a3520',
-                margin: '4px 0 0'
-              }}>
+              <p style={{ fontSize: '32px', fontWeight: '700', color: '#4a3520', margin: '4px 0 0' }}>
                 {stats.totalEmployees || 0}
               </p>
             </div>
@@ -297,11 +263,7 @@ const Dashboard = () => {
             </div>
           ) : (
             <div style={{ overflowX: 'auto' }}>
-              <table style={{
-                width: '100%',
-                borderCollapse: 'collapse',
-                fontSize: '14px'
-              }}>
+              <table style={{ width: '100%', borderCollapse: 'collapse', fontSize: '14px' }}>
                 <thead>
                   <tr style={{ background: '#f5efe6', borderRadius: '6px' }}>
                     <th style={{ padding: '12px 16px', textAlign: 'left', color: '#6b4c2a', fontWeight: '600', fontSize: '13px', textTransform: 'uppercase', letterSpacing: '0.5px' }}>Date & Time</th>
@@ -311,9 +273,7 @@ const Dashboard = () => {
                 </thead>
                 <tbody>
                   {attendance.map((record, index) => (
-                    <tr key={index} style={{
-                      borderTop: '1px solid #f0e8de'
-                    }}>
+                    <tr key={index} style={{ borderTop: '1px solid #f0e8de' }}>
                       <td style={{ padding: '12px 16px', color: '#4a3520' }}>
                         {format(new Date(record.timestamp), 'MMM d, HH:mm')}
                       </td>

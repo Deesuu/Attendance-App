@@ -180,9 +180,20 @@ const getTodayStats = async (req, res) => {
           },
           checkOuts: {
             $sum: { $cond: [{ $eq: ['$checkInType', 'OUT'] }, 1, 0] }
+          },
+          checkInTime: {
+            $min: {
+              $cond: [{ $eq: ['$checkInType', 'IN'] }, '$timestamp', null]
+            }
+          },
+          checkOutTime: {
+            $max: {
+              $cond: [{ $eq: ['$checkInType', 'OUT'] }, '$timestamp', null]
+            }
           }
         }
-      }
+      },
+      { $sort: { checkInTime: -1 } }
     ]);
 
     const totalEmployees = await Employee.countDocuments({ isRegistered: true });

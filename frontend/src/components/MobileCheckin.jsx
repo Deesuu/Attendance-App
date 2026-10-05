@@ -94,39 +94,28 @@ const MobileCheckin = () => {
         checkInType
       };
 
-      // Temporary debug log - remove after fixing
-      console.log('=== CHECK-IN PAYLOAD ===');
-      console.log('employeeId:', payload.employeeId);
-      console.log('deviceId:', payload.deviceId);
-      console.log('qrToken (first 30):', payload.qrToken.substring(0, 30));
-      console.log('checkInType:', payload.checkInType);
-      console.log('========================');
-
       const response = await api.post('/attendance/checkin', payload);
 
-     if (response.data.success) {
-  toast.success(`Checked ${checkInType === 'IN' ? 'in' : 'out'} successfully`);
+      if (response.data.success) {
+        toast.success(`Checked ${checkInType === 'IN' ? 'in' : 'out'} successfully`);
 
-  const empId = employeeId.trim();
-  const empName = response.data.data?.name || 'Employee';
+        const empId = employeeId.trim();
+        const empName = response.data.data?.name || 'Employee';
 
-  // Save to localStorage (may or may not persist on iOS)
-  try {
-    localStorage.setItem('attendance_employee_id', empId);
-    localStorage.setItem('attendance_employee_name', empName);
-  } catch (e) {
-    console.warn('localStorage failed:', e);
-  }
+        try {
+          localStorage.setItem('attendance_employee_id', empId);
+          localStorage.setItem('attendance_employee_name', empName);
+        } catch (e) {
+          console.warn('localStorage failed:', e);
+        }
 
-  setEmployeeId('');
-  setCheckInType('IN');
+        setEmployeeId('');
+        setCheckInType('IN');
 
-  // Navigate with employee ID in URL - most reliable
-  setTimeout(() => {
-    navigate(`/dashboard?employeeId=${encodeURIComponent(empId)}&name=${encodeURIComponent(empName)}`);
-  }, 2000);
-
-}
+        setTimeout(() => {
+          navigate(`/dashboard?employeeId=${encodeURIComponent(empId)}&name=${encodeURIComponent(empName)}`);
+        }, 2000);
+      }
     } catch (error) {
       console.error('Check-in error:', error);
       
@@ -188,7 +177,7 @@ const MobileCheckin = () => {
                 color: '#ffffff',
                 letterSpacing: '0.5px'
               }}>
-                Check-in
+                VeriStaff
               </span>
             </div>
             <h1 style={{
@@ -473,27 +462,36 @@ const MobileCheckin = () => {
               )}
             </button>
 
-            {/* TEMPORARY DEBUG BOX - FULL DEVICE ID */}
             <div style={{
-              background: '#ffff00',
+              background: '#f5efe6',
               padding: '10px 14px',
               borderRadius: '6px',
-              border: '2px solid #000',
-              marginTop: '4px',
-              wordBreak: 'break-all'
+              border: '1px solid #e8ddd0',
+              marginTop: '4px'
             }}>
               <p style={{
-                fontSize: '10px',
-                color: '#000',
+                fontSize: '11px',
+                color: '#8b7a66',
                 margin: 0,
-                fontFamily: 'monospace',
-                lineHeight: '1.4'
+                display: 'flex',
+                alignItems: 'center',
+                gap: '6px'
               }}>
-                <span style={{ fontWeight: '700' }}>DEVICE_ID_START:</span>
-                <br />
-                {deviceId}
-                <br />
-                <span style={{ fontWeight: '700' }}>:DEVICE_ID_END</span>
+                <span style={{
+                  display: 'inline-block',
+                  width: '6px',
+                  height: '6px',
+                  borderRadius: '50%',
+                  background: '#5a8f6c'
+                }}></span>
+                <span style={{ fontWeight: '600', color: '#4a3520' }}>Device:</span>
+                <span style={{
+                  fontFamily: 'monospace',
+                  fontSize: '10px',
+                  color: '#4a3520'
+                }}>
+                  {deviceId.substring(0, 12)}...
+                </span>
               </p>
             </div>
           </form>

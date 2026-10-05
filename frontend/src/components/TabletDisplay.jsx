@@ -53,9 +53,9 @@ const TabletDisplay = () => {
   }, []);
 
   const qrValue = `https://attendance-frontend-b57d.onrender.com/checkin?q=${encodeURIComponent(JSON.stringify({
-  token: qrToken,
-  timestamp: timestamp.toISOString()
-}))}`;
+    token: qrToken,
+    timestamp: timestamp.toISOString()
+  }))}`;
 
   return (
     <div style={{
@@ -94,7 +94,7 @@ const TabletDisplay = () => {
                 color: '#4a3520',
                 margin: 0
               }}>
-                Attendance System
+                VeriStaff
               </h1>
               <p style={{
                 fontSize: '16px',
@@ -213,7 +213,7 @@ const TabletDisplay = () => {
                 fontWeight: '700',
                 color: '#b45309',
                 fontSize: '16px'
-              }}>5 seconds</span>
+              }}>30 seconds</span>
             </p>
             <p style={{
               fontSize: '12px',
@@ -305,7 +305,7 @@ const TabletDisplay = () => {
                       textTransform: 'uppercase',
                       letterSpacing: '0.5px'
                     }}>
-                      Check In
+                      Check-In Time
                     </th>
                     <th style={{
                       padding: '12px 16px',
@@ -316,7 +316,7 @@ const TabletDisplay = () => {
                       textTransform: 'uppercase',
                       letterSpacing: '0.5px'
                     }}>
-                      Check Out
+                      Check-Out Time
                     </th>
                     <th style={{
                       padding: '12px 16px',
@@ -349,39 +349,27 @@ const TabletDisplay = () => {
                       </td>
                       <td style={{
                         padding: '12px 16px',
-                        textAlign: 'center'
+                        textAlign: 'center',
+                        fontFamily: 'monospace',
+                        color: '#2d6a4f',
+                        fontWeight: '600',
+                        fontSize: '13px'
                       }}>
-                        {record.checkIns > 0 ? (
-                          <span style={{
-                            display: 'inline-flex',
-                            alignItems: 'center',
-                            gap: '4px',
-                            color: '#2d6a4f',
-                            fontWeight: '600'
-                          }}>
-                            Yes
-                          </span>
-                        ) : (
-                          <span style={{ color: '#b8a692' }}>—</span>
-                        )}
+                        {record.checkInTime
+                          ? format(new Date(record.checkInTime), 'HH:mm:ss')
+                          : '—'}
                       </td>
                       <td style={{
                         padding: '12px 16px',
-                        textAlign: 'center'
+                        textAlign: 'center',
+                        fontFamily: 'monospace',
+                        color: '#9c2e2e',
+                        fontWeight: '600',
+                        fontSize: '13px'
                       }}>
-                        {record.checkOuts > 0 ? (
-                          <span style={{
-                            display: 'inline-flex',
-                            alignItems: 'center',
-                            gap: '4px',
-                            color: '#9c2e2e',
-                            fontWeight: '600'
-                          }}>
-                            Yes
-                          </span>
-                        ) : (
-                          <span style={{ color: '#b8a692' }}>—</span>
-                        )}
+                        {record.checkOutTime
+                          ? format(new Date(record.checkOutTime), 'HH:mm:ss')
+                          : '—'}
                       </td>
                       <td style={{
                         padding: '12px 16px',

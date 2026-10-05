@@ -49,9 +49,17 @@ const EmployeeRegistration = () => {
 
       if (response.data.success) {
         toast.success('Registration successful!');
+
         if (response.data.token) {
-          localStorage.setItem('attendance_token', response.data.token);
+          try {
+            localStorage.setItem('attendance_token', response.data.token);
+            localStorage.setItem('attendance_employee_id', employeeId.trim());
+            localStorage.setItem('attendance_employee_name', name.trim());
+          } catch (e) {
+            console.warn('localStorage failed:', e);
+          }
         }
+
         setTimeout(() => {
           navigate('/checkin');
         }, 2000);
@@ -105,7 +113,7 @@ const EmployeeRegistration = () => {
                 color: '#ffffff',
                 letterSpacing: '0.5px'
               }}>
-                Registration
+                VeriStaff
               </span>
             </div>
             <h1 style={{
@@ -114,7 +122,7 @@ const EmployeeRegistration = () => {
               color: '#4a3520',
               margin: '8px 0 4px'
             }}>
-              Employee Registration
+              VeriStaff Registration
             </h1>
             <p style={{
               fontSize: '14px',
@@ -187,7 +195,7 @@ const EmployeeRegistration = () => {
                 name="name"
                 value={formData.name}
                 onChange={handleChange}
-                placeholder="e.g., Yusuf kanbai"
+                placeholder="Enter full name"
                 style={{
                   width: '100%',
                   padding: '12px 16px',
@@ -229,7 +237,7 @@ const EmployeeRegistration = () => {
                 name="email"
                 value={formData.email}
                 onChange={handleChange}
-                placeholder="ykb@nvrlazy.com"
+                placeholder="john@company.com"
                 style={{
                   width: '100%',
                   padding: '12px 16px',
